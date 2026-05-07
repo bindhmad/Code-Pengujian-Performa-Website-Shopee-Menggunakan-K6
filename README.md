@@ -33,5 +33,8 @@ k6 run t1failed.js
 k6 run test2berhasil.js
 k6 run test2gagal.js
 
+```
+git clone https://github.com/bindhmad/Code-Pengujian-Performa-Website-Shopee-Menggunakan-K6.git
+
 📊 Kesimpulan Analisis
 Hasil pengujian menunjukkan bahwa website Shopee memiliki stabilitas yang sangat baik pada beban rendah hingga moderat (di bawah 30 users). Namun, penentuan threshold yang terlalu ketat (seperti pada t1failed.js) atau jumlah pengguna yang terlalu besar tanpa ramp-up yang panjang dapat menyebabkan status pengujian menjadi Failed meskipun server tetap beroperasi tanpa error 5xx.
