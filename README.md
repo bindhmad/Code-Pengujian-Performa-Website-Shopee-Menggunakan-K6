@@ -1,9 +1,9 @@
-# Analisis Performa Website Shopee Menggunakan Grafana k6
+# Analisis Performa Website Shopee Menggunakan Grafana k6 (Laporan Lengkap)
 
-Repository ini dibuat untuk memenuhi tugas mata kuliah **Testing dan Implementasi Sistem Informasi** yang diampu oleh **Ibu Monica Cinthya, M.Kom.** di Universitas Negeri Surabaya (UNESA).
+Repository ini berisi seluruh skrip pengujian performa untuk website **Shopee.co.id**, sebagai bagian dari tugas mata kuliah **Testing dan Implementasi Sistem Informasi** yang diampu oleh **Ibu Monica Cinthya, M.Kom.** di Universitas Negeri Surabaya.
 
 ## 📝 Deskripsi Proyek
-Proyek ini bertujuan untuk melakukan pengujian beban (*load testing*) dan pengujian stres (*stress testing*) pada website e-commerce (Shopee.co.id). Pengujian dilakukan menggunakan alat **Grafana k6** untuk mengukur stabilitas dan kecepatan respon server terhadap jumlah pengguna tertentu (*Virtual Users*).
+Proyek ini mengevaluasi infrastruktur web Shopee menggunakan berbagai metodologi pengujian, mulai dari pengujian beban statis hingga simulasi beban bertahap (*ramping-up*). Pengujian difokuskan pada pengukuran respon waktu, stabilitas koneksi, dan penentuan ambang batas (*threshold*) yang tepat.
 
 ## 👥 Anggota Kelompok 3
 1. **Naufal Daffa Wimasurya** (24051214216)
@@ -12,29 +12,26 @@ Proyek ini bertujuan untuk melakukan pengujian beban (*load testing*) dan penguj
 4. **Davit Hengky Saputra** (24051214244)
 
 ## 🚀 Skenario Pengujian
-Terdapat dua skenario utama dalam pengujian ini:
 
-1. **Skenario PASSED (t1passed.js)**
-   - **Tujuan:** Mengetahui performa website pada beban ringan.
-   - **Parameter:** 2 VUs, durasi 20 detik.
-   - **Threshold:** p(90) < 10 detik.
-   - **Hasil:** Berhasil (Passed) karena respon server sangat cepat di bawah beban rendah.
+### Bagian 1: Pengujian Dasar (Single Load)
+* **t1passed.js (Smoke Test):** Pengujian beban ringan (2 VUs) untuk memastikan fungsi dasar website berjalan normal dengan respon di bawah 1 detik.
+* **t1failed.js (Stress Test):** Pengujian dengan ambang batas ekstrim (50ms). Skenario ini sengaja dibuat gagal untuk menganalisis batas toleransi sistem.
 
-2. **Skenario FAILED (t1failed.js)**
-   - **Tujuan:** Menguji batas performa sistem dengan standar yang sangat ketat.
-   - **Parameter:** 10 VUs, durasi 30 detik.
-   - **Threshold:** p(90) < 50ms.
-   - **Hasil:** Gagal (Failed) karena ambang batas yang ditetapkan tidak realistis untuk ukuran website kompleks.
+### Bagian 2: Pengujian Lanjutan (Stages & Ramping)
+* **test2berhasil.js (Load Test):** Simulasi beban bertahap hingga 30 pengguna. Menggunakan *threshold* realistis untuk website e-commerce besar.
+* **test2gagal.js (Stress Test):** Simulasi beban tinggi hingga 300 pengguna. Skenario ini menguji pertahanan server terhadap lonjakan akses massa yang sering kali memicu *rate limiting*.
 
 ## 🛠️ Cara Menjalankan
-Pastikan Anda sudah menginstal [k6](https://k6.io/) di perangkat Anda.
+Pastikan Anda sudah menginstal [k6](https://k6.io/). Jalankan perintah berikut di terminal:
 
-1. Clone repository ini:
-   ```bash
-   git clone [https://github.com/bindhmad/Code-Pengujian-Performa-Website-Shopee-Menggunakan-K6.git](https://github.com/bindhmad/Code-Pengujian-Performa-Website-Shopee-Menggunakan-K6.git)
-
-   # Jalankan skenario PASSED
+```bash
+# Skenario Dasar
 k6 run t1passed.js
-
-# Jalankan skenario FAILED
 k6 run t1failed.js
+
+# Skenario Lanjutan (Stages)
+k6 run test2berhasil.js
+k6 run test2gagal.js
+
+📊 Kesimpulan Analisis
+Hasil pengujian menunjukkan bahwa website Shopee memiliki stabilitas yang sangat baik pada beban rendah hingga moderat (di bawah 30 users). Namun, penentuan threshold yang terlalu ketat (seperti pada t1failed.js) atau jumlah pengguna yang terlalu besar tanpa ramp-up yang panjang dapat menyebabkan status pengujian menjadi Failed meskipun server tetap beroperasi tanpa error 5xx.
